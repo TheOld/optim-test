@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 router.use(express.json());
 
-const extractXMLTags = require('../tools');
+const { extractXMLTags, calulateGST } = require('../tools');
 
 /**
  * This endpoint will parse the contents of a message and return a json object with the parsed data
@@ -51,20 +51,7 @@ router.post('/', function (req, res) {
         }
 
         if (tag === '<total>' && value) {
-          // We’ll use IRD’s recommended formula ((open market value x 3) ÷ 23) https://www.ird.govt.nz/gst/cancelling-your-gst-registration/cancel-your-gst-registration
-          const parsedTotal = parseFloat(value);
-          const gst = (parsedTotal * 3) / 23;
-
-          const exclusiveValue = value - gst;
-
-          values.total = {
-            // Set the GST (with 2 digits after the decimal point)
-            gst: gst.toFixed(2),
-            // The GST exclusive total
-            gst_exclusive: exclusiveValue.toFixed(2),
-            // And the original value
-            gst_inclusive: parsedTotal.toFixed(2),
-          };
+          values.total = calulateGST({ value });
         }
       }
     }
