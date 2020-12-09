@@ -69,6 +69,11 @@ router.post('/', function (req, res) {
       }
     }
 
+    // Some clean up
+    delete values.expense;
+
+    // Finally we return the response with the parsed data
+    res.send(values);
   } catch (error) {
     // Print error message on the console
     console.error(`file: content-parser.js ~ line 12 ~ error`, error);
