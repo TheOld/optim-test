@@ -42,6 +42,13 @@ router.post('/', function (req, res) {
             .send({ error: `Missing closing tag for ${strippedTag}.` });
           break;
         }
+
+        // For the particular case of cost_centre being null or empty, we'll set the value to UNKNOWN
+        if (tag === '<cost_centre>' && !value) {
+          values[`${strippedTag}`] = 'UNKNOWN';
+        } else {
+          values[`${strippedTag}`] = value;
+        }
       }
     }
 
