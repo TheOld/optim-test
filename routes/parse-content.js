@@ -29,6 +29,11 @@ router.post('/', function (req, res) {
         // Now we get the value from inside the valid tags, if the tag is empty we'll set the valu to `null` and treat it accordingly
         const value = content.split(tag).pop().split(closingTag)[0] || null;
 
+        // If there's no total set, we reject the message
+        if (tag === '<total>' && !value) {
+          res.status(400).send({ error: `Total value is not set.` });
+          break;
+        }
       }
     }
 
