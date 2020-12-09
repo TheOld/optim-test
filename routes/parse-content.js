@@ -49,6 +49,23 @@ router.post('/', function (req, res) {
         } else {
           values[`${strippedTag}`] = value;
         }
+
+        if (tag === '<total>' && value) {
+          // We’ll use IRD’s recommended formula ((open market value x 3) ÷ 23) https://www.ird.govt.nz/gst/cancelling-your-gst-registration/cancel-your-gst-registration
+          const parsedTotal = parseFloat(value);
+          const gst = (parsedTotal * 3) / 23;
+
+          const exclusiveValue = value - gst;
+
+          values.total = {
+            // Set the GST (with 2 digits after the decimal point)
+            gst: gst.toFixed(2),
+            // The GST exclusive total
+            gst_exclusive: exclusiveValue.toFixed(2),
+            // And the original value
+            gst_inclusive: parsedTotal.toFixed(2),
+          };
+        }
       }
     }
 
