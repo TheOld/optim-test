@@ -34,6 +34,14 @@ router.post('/', function (req, res) {
           res.status(400).send({ error: `Total value is not set.` });
           break;
         }
+
+        // Here we'll check for missing closing tags
+        if (!content.includes(closingTag)) {
+          res
+            .status(400)
+            .send({ error: `Missing closing tag for ${strippedTag}.` });
+          break;
+        }
       }
     }
 
