@@ -1,5 +1,6 @@
 // Importing required express and router
 const express = require('express');
+const bodyParser = require('body-parser');
 const router = express.Router();
 router.use(express.json());
 
@@ -8,9 +9,10 @@ const { extractXMLTags, calulateGST } = require('../tools');
 /**
  * This endpoint will parse the contents of a message and return a json object with the parsed data
  */
-router.post('/', function (req, res) {
+router.post('/', bodyParser.text({ type: '*/*' }), function (req, res) {
   try {
-    const { content } = req.body;
+    const content = req.body;
+
     // First we'll extract the XML tags from the string (includes closing ones)
     const tags = extractXMLTags({ xml: content });
 
